@@ -94,7 +94,10 @@ exports.signUp = async(req,res) => {
         const existingUser = await User.findOne({email}) 
 
         if(existingUser){
-            return res.status()
+            return res.status(401).json({
+                success:false,
+                message:"User Already Register Please Login "
+            })
         }
 
         const recentOTP = await OTP.find({email}).sort({createdAt:-1}).limit(1)
@@ -163,7 +166,7 @@ exports.logIn = async(req,res)=>{
 
         const user = await User.findOne({email}).populate("additionalDetails")
 
-        if(user){
+        if(!user){
             return res.status(401).json({
                 success:false,
                 message:"User Not Register Please SignUp First"
