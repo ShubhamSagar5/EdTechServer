@@ -1,9 +1,9 @@
 
 
-const Tag = require("../Models/tags")
+const Category = require("../Models/category")
 
 
-exports.createTag = async(req,res) => {
+exports.createCategory = async(req,res) => {
     try{
 
         const {name,description} = req.body 
@@ -15,36 +15,36 @@ exports.createTag = async(req,res) => {
             })
         }
 
-        const tagDeatils = await Tag.create({name:name,description:description})
+        const categoryDeatils = await Category.create({name:name,description:description})
 
         return res.status(200).json({
             success:true,
-            message:"Tags created successfully"
+            message:"Category created successfully"
         })
 
     }catch(error){
         return res.status(500).json({
             success:false,
-            message:"Something went wrong while creating tag " + error.message
+            message:"Something went wrong while creating Category " + error.message
         })
     }
 }
 
 
-exports.showAllTags = async(req,res) => {
+exports.showAllCategory = async(req,res) => {
     try{
 
-        const allTags = await Tag.find({},{name:true,description:true})
+        const allCategory = await Category.find({},{name:true,description:true})
         return res.status(200).json({
             success:true,
-            message:"All tags retrun successfully"
+            message:"All Category retrun successfully"
         })
 
 
     }catch(error){
         return res.status(500).json({
             success:false,
-            message:"Something went wrong while fetching tag " + error.message
+            message:"Something went wrong while fetching Category " + error.message
         })
     }
 }

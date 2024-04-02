@@ -1,6 +1,6 @@
 const User = require("../Models/User")
 const Course = require("../Models/course")
-const Tag = require("../Models/tags")
+const Category = require("../Models/category")
 const {uploadImageToCloudinary} = require("../Utilis/imageUploder")
 require('dotenv').config()
 
@@ -8,11 +8,11 @@ exports.createCourse = async(req,res) => {
 
     try{
 
-        const {courseName,courseDescription,whatYouWillLearn,price,tag} = req.body 
+        const {courseName,courseDescription,whatYouWillLearn,price,category} = req.body 
 
         const thumbnail = req.files.thumbnailImage
 
-        if(!courseName || !courseDescription || !whatYouWillLearn || !price || !tag){
+        if(!courseName || !courseDescription || !whatYouWillLearn || !price || !category){
             return res.status(401).json({
                 success:false,
                 message:"All Fields Required"
@@ -31,11 +31,11 @@ exports.createCourse = async(req,res) => {
             })
         }
 
-        const tagDeatils = await Tag.findById(tag) 
-        if(!tagDeatils){
+        const categoryDeatils = await Category.findById(category) 
+        if(!categoryDeatils){
             return res.status(404).json({
                 success:false,
-                message:"Tag Deatils Not Found "
+                message:"Category Deatils Not Found "
             })
         }
 
@@ -47,13 +47,13 @@ exports.createCourse = async(req,res) => {
             instructor:instructorDeatils._id,
             whatYouWillLearn:whatYouWillLearn,
             price:price,
-            tag:tagDeatils._id,
+            category:categoryDeatils._id,
             thumbnail:thumbnailImage.secure_url
         })
 
         await User.findByIdAndUpdate({id:instructorDeatils._id},{$push:{courses:newCourse._id}},{new:true})
         //HOMEWORK
-        await Tag.findByIdAndUpdate({id:tagDeatils._id},{$push:{course:newCourse._id}},{new:true})
+        await Category.findByIdAndUpdate({id:categoryDeatils._id},{$push:{course:newCourse._id}},{new:true})
 
         return res.status(200).json({
             success:true,
