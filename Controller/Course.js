@@ -98,3 +98,47 @@ exports.showAllCourse = async(req,res) => {
         })
     }
 }
+
+exports.getCourseDetails = async(req,res) => {
+    try{
+
+        const {courseId} = req.body 
+
+        const courseDetails = await Course.find(
+                                            {_id:courseId})
+                                            .populate({
+                                                path:"instructor",
+                                                populate:{
+                                                    path:"additionalDetails"
+                                                }
+                                            })
+                                            .populate("ratingAndReview")
+                                            .populate("category")
+                                            .populate({
+                                                path:"courseContent",
+                                                populate:{
+                                                    path:"subSection"
+                                                }
+                                            }).exec()
+
+            if(!courseDetails){
+                return res.status(400).json({
+                    success:false,
+                    message:`Could not find the courseDetails with this id ${courseId}`
+                })
+            }
+
+            return res.status(200).json({
+                success:true,
+                message:"Course Details find successfully ",
+                data:courseDetails
+
+            })
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
