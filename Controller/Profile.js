@@ -58,7 +58,7 @@ exports.deleteAccount = async(req,res) => {
         }
 
         await Profile.findByIdAndDelete({_id:userDeatils.additionalDetails})
-///dleedte user student enrolled
+///delete user student enrolled
         await User.findByIdAndDelete({_id:userId})
 
         return res.status(200).json({
